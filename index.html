@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>AJAX</title>
+</head>
+<body>
+	<h6>Para provarlo tienes que descargarlo, <br> porque la simulación del servidor es un archivo ".php", <br> de lo contrario no funciona.</h6>
+
+	<h1>Entendiendo AJAX</h1>
+	<h6>-Lo básico-</h6>
+	<p>Simulación de lo que hace Ajax <br> entre la web y el servidor.</p>
+
+	<button onclick="escribir();">
+		Escribir desde el backend
+	</button><!-- Al precionar este botón se
+	dispara la función "escribir();" donde se cargan los
+	datos del servidor y los imprime en un parrafo
+	con el id "cuaderno". -->
+
+	<br>
+	<br>
+
+	<input type="text" name="escrito" id="escrito">
+
+	<br>
+	<br>
+
+
+	<button onclick="escribirMensaje();">
+		Escribir texto
+	</button><!-- Al precionar este botón se
+	dispara la	función "escribirMensaje();" donde 
+	se cargan los datos que el usuario ingresa por
+	el input de id "escrito" e imprime en un parrafo
+	con el id "cuaderno". -->
+
+	<p id="cuaderno"></p>
+
+
+	<script type="text/javascript">
+		
+		function escribir() {
+			var objeto = new XMLHttpRequest();
+			objeto.open('GET', 'backend.php', true);
+			objeto.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				objeto.onreadystatechange = function () {
+					document.getElementById('cuaderno').innerHTML = objeto.responseText;
+				}
+			objeto.send();
+		}
+
+		/*
+		escribir();
+		1- Lo primero que hace es ejecutar un metodo
+		"XMLHttpRequest" por el que se puede mandar
+		y recibir datos, en donde que se guarda en
+		un objeto llamado, en este caso "objeto".
+
+		2- Luego por medio del "XMLHttpRequest" 
+		ejecutamos una función llamada "open" donde
+		por parámetros le decimos que se usa el metodo
+		"GET", porque en este caso se *solicitan* datos
+		desde otra fuente, cuya fuente tiene como 
+		dirección el archivo llamado "backend.php".
+		Dicha fuente puede ser un servidor. Luego
+		se pone true ó False, para decirle si es
+		síncrona o asíncrona.
+
+		3- Después se "filtran" los datos estableciendo
+		una cabecera de solicitud "objeto.setRequestHeader",
+		donde por parámetros se le dice qué tipo de
+		información será. y con "objeto.send" se envia
+		la solicitud.
+
+		(resumen: Se piden datos al servidor, el cual
+		retorna los datos.)
+
+		4- Se agrega un "escuchador" que se encarga de
+		ver si se está recibiendo algo del servidor, el
+		cual se maneja por una función en la que el 
+		resultado de la solicitud a la BD, 
+		"objeto.responseText", se escribe en un
+		elemento del HTML (parrafo) con la id "cuaderno".  
+
+		*/
+
+		function escribirMensaje() {
+			var objeto = new XMLHttpRequest();
+			objeto.open('POST', 'backend.php', true);
+			objeto.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			objeto.onreadystatechange = function () {
+				// console.log(objeto.responseText);
+				document.getElementById('cuaderno').innerHTML = objeto.responseText;
+			}
+
+			var escrito = document.getElementById('escrito');
+			objeto.send('user_writed='+ escrito.value);
+		}
+
+		/*
+		escribirMensaje();
+		Hace el mismo proceso anterior, pero en este
+		casa simulamos un *envío* de datos al servidor,
+		por lo que como metodo al objeto.open se le 
+		cambia a "POST" y toma los datos del elemento
+		del HTML (input) con id "escrito", y los envía
+		al servidor como nombre "user_write".
+
+		Luego de que el "servidor" reciba el dato,
+		retornará un mensaje el cual es escrito en el
+		elemento HTML con id "cuaderno". 
+		*/
+
+	</script>
+</body>
+</html>
